@@ -1,4 +1,6 @@
 # .chezmoiignore
+.gitconfig
+
 {{- if ne .chezmoi.os "linux" }}
 .bashrc
 .profile
