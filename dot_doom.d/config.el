@@ -52,3 +52,80 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(use-package! org-roam
+  :init
+  (map! :leader
+        :prefix "n"
+        :desc "org-roam" "l" #'org-roam-buffer
+        :desc "org-roam-node-insert" "i" #'org-roam-node-insert
+        :desc "org-roam-node-find" "f" #'org-roam-node-find
+        :desc "org-roam-ref-find" "r" #'org-roam-ref-find
+        :desc "org-roam-show-graph" "g" #'org-roam-show-graph
+        :desc "org-roam-capture" "c" #'org-roam-capture
+        ;; :desc "org-roam-dailies-capture-today" "j" #'org-roam-dailies-capture-today)
+
+  (setq org-roam-directory (file-truename "~/.org/roam/")
+        org-roam-db-gc-threshold most-positive-fixnum
+        org-id-link-to-org-use-id t)
+  :config
+  (org-roam-setup)
+  (require 'org-roam-backlinks)
+  (require 'org-roam-reflinks)
+  (require 'org-roam-unlinked-references)
+  (setq org-roam-mode-sections
+        (list #'org-roam-backlinks-insert-section
+              #'org-roam-reflinks-insert-section
+              #'org-roam-unlinked-references-insert-section))
+  (setq org-roam-capture-templates
+        '(("d" "default" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "${slug}"
+           :head "#+title: ${title}\n"
+           :immediate-finish t
+           :unnarrowed t)
+          ("p" "private" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "private/${slug}"
+           :head "#+title: ${title}\n"
+           :immediate-finish t
+           :unnarrowed t)))
+  (setq org-roam-capture-ref-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "${slug}"
+           :head "#+roam_key: ${ref}
+#+roam_tags: website
+#+title: ${title}
+- source :: ${ref}"
+           :unnarrowed t)))
+  (add-to-list 'org-capture-templates `("c" "org-protocol-capture" entry (file+olp ,(expand-file-name "reading_and_writing_inbox.org" org-roam-directory) "The List")
+                                         "* TO-READ [[%:link][%:description]] %^g"
+                                         :immediate-finish t))
+  (add-to-list 'org-agenda-custom-commands `("r" "Reading"
+                                             ((todo "WRITING"
+                                                    ((org-agenda-overriding-header "Writing")
+                                                     (org-agenda-files '(,(expand-file-name "reading_and_writing_inbox.org" org-roam-directory)))))
+                                              (todo "READING"
+                                                    ((org-agenda-overriding-header "Reading")
+                                                     (org-agenda-files '(,(expand-file-name "reading_and_writing_inbox.org" org-roam-directory)))))
+                                              (todo "TO-READ"
+                                                    ((org-agenda-overriding-header "To Read")
+                                                     (org-agenda-files '(,(expand-file-name "reading_and_writing_inbox.org" org-roam-directory))))))))
+  ;; (setq org-roam-dailies-directory "daily/")
+  ;; (setq org-roam-dailies-capture-templates
+  ;;     '(("d" "default" entry
+  ;;        #'org-roam-capture--get-point
+  ;;        "* %?"
+  ;;        :file-name "daily/%<%Y-%m-%d>"
+  ;;        :head "#+title: %<%Y-%m-%d>\n\n")))
+  (set-company-backend! 'org-mode '(company-capf)))
+
+  (after! org-ref
+    (setq org-ref-default-bibliography `,(list (concat org-directory "braindump/org/biblio.bib"))))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
