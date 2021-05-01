@@ -8,14 +8,6 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
-fi
-
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -26,11 +18,38 @@ fi
 if [ -d "$HOME/local/bin" ] ; then
     PATH="$HOME/local/bin:$PATH"
 fi
-
-# set PATH so it includes user's private bin if it exists
+# Emacs Doom
 if [ -d "$HOME/.emacs.d/bin" ] ; then
     PATH="$HOME/.emacs.d/bin:$PATH"
 fi
-
 # Rust
-source "$HOME/.cargo/env"
+if [ -d "$HOME/.cargo/env" ] ; then
+    PATH="$HOME/.cargo/env:$PATH"
+fi
+# Platform IO
+if [ -d "$HOME/.platformio/penv/bin" ] ; then
+    PATH="$HOME/.platformio/penv/bin:$PATH"
+fi
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/espen/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/espen/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/espen/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/espen/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
