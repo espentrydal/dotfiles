@@ -132,3 +132,4 @@
         "C-M-)" #'sp-backward-slurp-sexp
         "C-M-)" #'sp-backward-barf-sexp))
 
+(setq rmh-elfeed-org-files ("~/org/elfeed.org"))
