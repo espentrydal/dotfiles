@@ -17,9 +17,8 @@
 
 (package! ctrlf)
 
-;;(package! org-roam-bibtex
-;;  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-;; When using bibtex-completion via the `biblio` module
-;;(unpin! bibtex-completion helm-bibtex ivy-bibtex)
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex" : branch "org-roam-v2"))
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
 (unpin! jupyter)

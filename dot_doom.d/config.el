@@ -111,6 +111,12 @@
  ;;              ))
   (org-roam-setup))
 
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (require 'org-ref))
+
 
 (use-package! ctrlf
   :hook
