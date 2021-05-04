@@ -1,0 +1,97 @@
+##########################
+# Personal Configuration #
+##########################
+
+# Name Account
+IMAPAccount "{{ (bitwardenFields "item" "notmuch").domain.value }}"
+Host imap.fastmail.com
+User "{{ (bitwarden "item" "notmuch").login.username }}"
+Pass "{{ (bitwarden "item" "notmuch").login.password }}"
+
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore personal-remote
+Account Personal
+
+MaildirStore personal-local
+Subfolders Verbatim
+Path ~/.mail/
+Inbox ~/.mail/Inbox
+
+Channel sync-personal-inbox
+Master :personal-remote:"Inbox"
+Slave :personal-local:Inbox
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-archive
+Master :personal-remote:"Archive"
+Slave :personal-local:Archive
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-sent
+Master :personal-remote:"Sent"
+Slave :personal-local:Sent
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-trash
+Master :personal-remote:"Junk"
+Slave :personal-local:Trash
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+# Ekstra-mapper
+
+Channel sync-personal-@kalender
+Master :personal-remote:"@kalender"
+Slave :personal-local:@kalender
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-@reise
+Master :personal-remote:"@reise"
+Slave :personal-local:@reise
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-@venter
+Master :personal-remote:"@venter"
+Slave :personal-local:@venter
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-bank
+Master :personal-remote:"Bank"
+Slave :personal-local:bank
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+Channel sync-personal-bolig
+Master :personal-remote:"Bolig"
+Slave :personal-local:bolig
+Create Slave
+SyncState *
+CopyArrivalDate yes
+
+# Get all the channels together into a group.
+Group Personal
+Channel sync-personal-inbox
+Channel sync-personal-archive
+Channel sync-personal-sent
+Channel sync-personal-trash
+Channel sync-personal-@kalender
+Channel sync-personal-@reise
+Channel sync-personal-@venter
+Channel sync-personal-bank
+Channel sync-personal-bolig

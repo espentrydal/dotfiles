@@ -139,3 +139,25 @@
         "C-M-)" #'sp-backward-barf-sexp))
 
 (setq rmh-elfeed-org-files ("~/org/elfeed.org"))
+
+(setq +notmuch-sync-backend 'mbsync)
+(setq notmuch-saved-searches '((:name "Unread"
+                                :query "tag:inbox and tag:unread"
+                                :count-query "tag:inbox and tag:unread"
+                                :sort-order newest-first)
+                               (:name "Inbox"
+                                :query "tag:inbox"
+                                :count-query "tag:inbox"
+                                :sort-order newest-first)
+                               (:name "Archive"
+                                :query "tag:archive"
+                                :count-query "tag:archive"
+                                :sort-order newest-first)
+                               (:name "Sent"
+                                :query "tag:sent or tag:replied"
+                                :count-query "tag:sent or tag:replied"
+                                :sort-order newest-first)
+                               (:name "Trash"
+                                :query "tag:deleted"
+                                :count-query "tag:deleted"
+                                :sort-order newest-first)))
