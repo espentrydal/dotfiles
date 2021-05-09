@@ -3,16 +3,15 @@
 ##########################
 
 # Name Account
-IMAPAccount "{{ (bitwardenFields "item" "notmuch").domain.value }}"
+IMAPAccount fastmail
 Host imap.fastmail.com
 User "{{ (bitwarden "item" "notmuch").login.username }}"
 Pass "{{ (bitwarden "item" "notmuch").login.password }}"
-
 SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore personal-remote
-Account Personal
+Account fastmail
 
 MaildirStore personal-local
 Subfolders Verbatim
@@ -71,14 +70,14 @@ SyncState *
 CopyArrivalDate yes
 
 Channel sync-personal-bank
-Master :personal-remote:"Bank"
+Master :personal-remote:"bank"
 Slave :personal-local:bank
 Create Slave
 SyncState *
 CopyArrivalDate yes
 
 Channel sync-personal-bolig
-Master :personal-remote:"Bolig"
+Master :personal-remote:"bolig"
 Slave :personal-local:bolig
 Create Slave
 SyncState *

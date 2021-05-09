@@ -69,7 +69,7 @@ tags = -inbox
 folders = .mail/Inbox .mail/@kalender .mail/@reise .mail/@venter .mail/bank .mail/bolig
 rename = True
 #max_age = 7
-.mail/Inbox = 'tag:deleted':.mail/Trash 'tag:archive':.mail/Archive 'tag:@kalendar':.mail/@kalender 'tag:@kalendar':.mail/@reise 'tag:@kalendar':.mail/@venter 'tag:bank':.mail/bank 'tag:bolig':.mail/bolig
+.mail/Inbox = 'tag:deleted':.mail/Trash 'tag:archive':.mail/Archive 'tag:@kalender':.mail/@kalender 'tag:@kalender':.mail/@reise 'tag:@kalender':.mail/@venter 'tag:bank':.mail/bank 'tag:bolig':.mail/bolig
 
 # what's still new goes into the inbox
 [InboxFilter]
