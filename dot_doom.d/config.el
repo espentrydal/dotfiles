@@ -111,11 +111,11 @@
  ;;              ))
   (org-roam-setup))
 
-(use-package! org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (require 'org-ref))
+;; (use-package! org-roam-bibtex
+;;   :after org-roam
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :config
+;;   (require 'org-ref))
 
 
 (use-package! ctrlf
@@ -138,26 +138,96 @@
         "C-M-)" #'sp-backward-slurp-sexp
         "C-M-)" #'sp-backward-barf-sexp))
 
-(setq rmh-elfeed-org-files ("~/org/elfeed.org"))
+(setq rmh-elfeed-org-files "~/org/elfeed.org")
 
 (setq +notmuch-sync-backend 'mbsync)
-(setq notmuch-saved-searches '((:name "Unread"
-                                :query "tag:inbox and tag:unread"
-                                :count-query "tag:inbox and tag:unread"
-                                :sort-order newest-first)
-                               (:name "Inbox"
-                                :query "tag:inbox"
-                                :count-query "tag:inbox"
-                                :sort-order newest-first)
-                               (:name "Archive"
-                                :query "tag:archive"
-                                :count-query "tag:archive"
-                                :sort-order newest-first)
-                               (:name "Sent"
-                                :query "tag:sent or tag:replied"
-                                :count-query "tag:sent or tag:replied"
-                                :sort-order newest-first)
-                               (:name "Trash"
-                                :query "tag:deleted"
-                                :count-query "tag:deleted"
-                                :sort-order newest-first)))
+(after! notmuch
+  (set-popup-rule! "^\\*notmuch-hello" :ignore t)
+  (setq notmuch-saved-searches '((:name "Unread"
+                                  :query "tag:inbox and tag:unread"
+                                  :count-query "tag:inbox and tag:unread"
+                                  :sort-order newest-first
+                                  :key "u")
+                                 (:name "Inbox"
+                                  :query "tag:inbox"
+                                  :count-query "tag:inbox"
+                                  :sort-order newest-first
+                                  :key "i")
+                                 (:name "All mail"
+                                  :query "*"
+                                  :sort-order newest-first
+                                  :key "a")
+                                 (:name "Sent"
+                                  :query "tag:sent or tag:replied"
+                                  :count-query "tag:sent or tag:replied"
+                                  :sort-order newest-first)
+                                 (:name "Trash"
+                                  :query "tag:deleted"
+                                  :count-query "tag:deleted"
+                                  :sort-order newest-first)))
+
+
+;; ; stores postponed messages to the specified directory
+;; (setq message-directory "MailLocation/Drafts") ;
+
+;; ;set sent mail directory
+;; (setq notmuch-fcc-dirs "MailLocation/Sent")
+
+;Settings for main screen
+(setq notmuch-hello-hide-tags (quote ("killed")))
+
+;; ;Message composition and sending settings
+
+;; ;Setup User-Agent header
+;; (setq mail-user-agent 'message-user-agent)
+
+;; (setq message-kill-buffer-on-exit t) ; kill buffer after sending mail)
+;; (setq mail-specify-envelope-from t) ; Settings to work with msmtp
+
+;; (setq send-mail-function (quote sendmail-send-it))
+;; (setq sendmail-program "~/.local/bin/msmtp-enqueue.sh"
+;;   mail-specify-envelope-from t
+;; ;; needed for debians message.el cf. README.Debian.gz
+;;  message-sendmail-f-is-evil nil
+;;   mail-envelope-from 'header
+;;   message-sendmail-envelope-from 'header)
+
+;Reading mail settings:
+
+(define-key notmuch-show-mode-map "D"
+    (lambda ()
+    "mark message as deleted"
+    (interactive)
+(notmuch-show-tag (list "+deleted" "-inbox"))))
+
+(define-key notmuch-search-mode-map "D"
+(lambda ()
+    "mark message as deleted"
+    (interactive)
+    (notmuch-search-tag (list "-inbox" "+deleted"))
+    (next-line) ))
+
+(define-key notmuch-show-mode-map "S"
+    (lambda ()
+    "mark message as spam"
+    (interactive)
+(notmuch-show-tag (list "+spam" "-inbox"))))
+
+(define-key notmuch-search-mode-map "S"
+(lambda ()
+    "mark message as spam"
+    (interactive)
+    (notmuch-search-tag (list "-inbox" "+spam"))
+    (next-line) ))
+
+(defun my-notmuch-show-unsubscribe ()
+  "When in a notmuch show mail, try to find an unsubscribe link and click it..
+
+   This will be the link nearest the end of the message which either contains or follows the word unsubscribe."
+  (interactive)
+  (notmuch-show-move-to-message-bottom)
+  (when (search-backward "unsubscribe" (notmuch-show-message-top))
+    (if (ffap-url-at-point)
+        (goto-char (car ffap-string-at-point-region)))
+
+    (ffap-next-url))))
