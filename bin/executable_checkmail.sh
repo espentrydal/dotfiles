@@ -5,7 +5,7 @@ STATE=`nmcli networking connectivity`
 if [ $STATE = 'full' ]
 then
 #    ~/.local/bin/msmtp-runqueue.sh
-    mbsync -A
+    mbsync -a
     notmuch new
     /usr/bin/afew -tn
     notmuch tag -inbox tag:inbox AND tag:lists
