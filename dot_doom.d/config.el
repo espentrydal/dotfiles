@@ -194,13 +194,26 @@
 
 ;Reading mail settings:
 
-(define-key notmuch-show-mode-map "D"
+(define-key notmuch-show-mode-map "y"
+    (lambda ()
+    "mark message as archived (tag)"
+    (interactive)
+(notmuch-show-tag (list "+archive" "-inbox"))))
+
+(define-key notmuch-search-mode-map "y"
+(lambda ()
+    "mark message as archived"
+    (interactive)
+    (notmuch-search-tag (list "-inbox" "+archive"))
+    (next-line) ))
+
+(define-key notmuch-show-mode-map "d"
     (lambda ()
     "mark message as deleted"
     (interactive)
 (notmuch-show-tag (list "+deleted" "-inbox"))))
 
-(define-key notmuch-search-mode-map "D"
+(define-key notmuch-search-mode-map "d"
 (lambda ()
     "mark message as deleted"
     (interactive)
