@@ -30,6 +30,10 @@ fi
 if [ -d "$HOME/.platformio/penv/bin" ] ; then
     PATH="$HOME/.platformio/penv/bin:$PATH"
 fi
+# Scala
+if [ -d "$HOME/.local/share/coursier/bin:$PATH" ] ; then
+    PATH="$HOME/.platformio/penv/bin:$PATH"
+fi
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -53,3 +57,8 @@ if [ -n "$BASH_VERSION" ]; then
 	. "$HOME/.bashrc"
     fi
 fi
+
+# >>> JVM installed by coursier >>>
+export JAVA_HOME="/home/espen/.cache/coursier/jvm/adopt@1.11.0-11"
+export PATH="$PATH:/home/espen/.cache/coursier/jvm/adopt@1.11.0-11/bin"
+# <<< JVM installed by coursier <<<
